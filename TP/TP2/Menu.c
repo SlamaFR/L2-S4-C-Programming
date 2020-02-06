@@ -15,7 +15,6 @@ void rectangle(int x1, int y1, int x2, int y2, int color) {
 }
 
 void credit() {
-    nodelay(stdscr, FALSE);
     clear();
     attron(A_BOLD);
     mvprintw(LINES / 2 - 1, COLS / 2 - 10, "Programme créé par :");
@@ -24,7 +23,6 @@ void credit() {
     mvprintw(LINES / 2 + 2, COLS / 2 - 8, "Chayma GUERRASSI");
     refresh();
     getch();
-    nodelay(stdscr, TRUE);
 }
 
 void options(int *speed) {
@@ -32,7 +30,6 @@ void options(int *speed) {
 
     echo();
     curs_set(1);
-    nodelay(stdscr, FALSE);
 
     clear();
     attron(A_BOLD);
@@ -48,10 +45,10 @@ void options(int *speed) {
 
     noecho();
     curs_set(0);
-    nodelay(stdscr, TRUE);
 }
 
 void game(int speed) {
+    nodelay(stdscr, TRUE);
     int key, x, y, xv = 1, yv = 1;
     int moving = 0, running = 1;
 
@@ -76,9 +73,9 @@ void game(int speed) {
 
         if (moving) {
 
-            if (x + xv < 0 || x + xv > COLS - 1)
+            if (x + xv < 0 || x + xv > COLS - 2)
                 xv = -xv;
-            if (y + yv < 0 || y + yv > LINES - 1)
+            if (y + yv < 0 || y + yv > LINES - 2)
                 yv = -yv;
 
             rectangle(x, y, x + 2, y + 2, 1);
@@ -93,12 +90,33 @@ void game(int speed) {
 
 void menu() {
     char *choices[] = {"Demarrer", "Options", "Credits", "Quitter"};
-    int key, choice = 0, i, x, y, velocity = 2;
+    int key = ERR, choice = 0, i, x, y, velocity = 2;
 
     while (1) {
-        key = getch();
-
-        clear();
+        if (key == KEY_UP) {
+            if (choice > 0) choice--;
+            else choice = 3;
+        }
+        if (key == KEY_DOWN) {
+            if (choice < 3) choice++;
+            else choice = 0;
+        }
+        if (key == '\n') {
+            switch (choice) {
+                case 0:
+                    game(velocity);
+                    return;
+                case 1:
+                    options(&velocity);
+                    break;
+                case 2:
+                    credit();
+                    break;
+                default:
+                    return;
+            }
+            clear();
+        }
         for (i = 0; i < 4; i++) {
             x = (COLS - (int) strlen(choices[i])) / 2 - 1;
             y = LINES / 2 - 4 + i * 2;
@@ -107,32 +125,7 @@ void menu() {
             mvprintw(y, x, "%d - %s", i + 1, choices[i]);
             if (i == choice) attroff(A_REVERSE);
         }
-
-        if (key != ERR) {
-            if (key == KEY_UP) {
-                if (choice > 0) choice--;
-                else choice = 3;
-            }
-            if (key == KEY_DOWN) {
-                if (choice < 3) choice++;
-                else choice = 0;
-            }
-            if (key == '\n') {
-                switch (choice) {
-                    case 0:
-                        game(velocity);
-                        return;
-                    case 1:
-                        options(&velocity);
-                        break;
-                    case 2:
-                        credit();
-                        break;
-                    case 3:
-                        return;
-                }
-            }
-        }
+        key = getch();
         refresh();
     }
 }
@@ -143,7 +136,7 @@ int main(void) {
     noecho();
     start_color();
     keypad(stdscr, TRUE);
-    nodelay(stdscr, TRUE);
+    //keypad(stdscr, TRUE);
     curs_set(0);
 
     init_pair(0, COLOR_WHITE, COLOR_BLACK);
