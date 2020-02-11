@@ -1,35 +1,40 @@
-//
-//  Triangle.c
-//  
-//
-//  Created by Chayma guerrassi on 06/02/2020.
-//
+/* Chayma Guerrasi */
 
-#include <stdio.h>
 #include <stdlib.h>
-
 #include <ncurses.h>
-#include <unistd.h>
+#include <assert.h>
 
-
-void triangle1(int n, char* c){
-    /*Fonction qui dessine un triangle de caractère c, de base 2n+1 et de hauteur n+1 pointant vers le bas */
-    
-   
-        int i, j;
-
-        for (i=0 ; i < n/2+1 ; i++) {
-            for (j=0 ; j < n ; j++)
-                printf("%s",i <= j && i <= -j+n-1? c : " ");
-            printf("\n");
-        }
+/**
+ * Fonction qui dessine un triangle de caractère c,
+ * de base 2n+1 et de hauteur n+1 pointant vers le bas.
+ */
+void triangle(int n, char c) {
+    int i, j;
+    for (i = 0; i < n + 1; i++) {
+        move((LINES - n) / 2 + i, COLS / 2 - n);
+        for (j = 0; j < 2 * n + 1; j++)
+            printw("%c", j < i || j >= (2 * n + 1 - i) ? ' ' : c);
+    }
 }
 
 
+int main(int argc, char *argv[]) {
+    int n;
+    char c;
+    assert(argc >= 3);
 
+    /* Récupération des arguments. */
+    n = atoi(argv[1]);
+    c = *argv[2];
 
- int main(void) {
-     
-     triangle1(7, "*");
- }
+    initscr();
+    curs_set(0);
+    noecho();
+
+    triangle(n, c);
+
+    getch();
+    endwin();
+    return 0;
+}
 
