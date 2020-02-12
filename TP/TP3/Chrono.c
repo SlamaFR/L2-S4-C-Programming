@@ -1,17 +1,9 @@
 #include <ncurses.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <stdlib.h>
 
-/**
- *  Espace : lancer / mettre en pause
-    r : reinitialiser
-    t : marquer tour
-    F1/F2 : incrementer / decrementer heure avertissement
-    F3/F4 : incrementer / decrementer minute avertissement
-    F5/F6 : incrementer / decrementer seconde avertissement
-    q : quitter
- */
+#define MAX_TIME 640000000
+#define N 10
 
 typedef struct timeval Time;
 
@@ -19,7 +11,7 @@ typedef struct Chrono {
     int etat;
     long int duree_totale;
     long int minuteur;
-    long int tours[20];
+    long int tours[N];
     int nb_tours;
     int indice_tour;
 } Chronometre;
@@ -53,6 +45,14 @@ int nb_ms_vers_heures(int nb_ms) {
     return (nb_ms / (60 * 1000)) / 60;
 }
 
+void ajouter_tour(Chronometre *chrono) {
+    chrono->tours[chrono->indice_tour % N] = chrono->duree_totale;
+
+    /*Incrémenter l'indice du dernier tour.*/
+    chrono->indice_tour++;
+    chrono->nb_tours++;
+}
+
 void afficher_flash() {
 
 }
@@ -65,34 +65,50 @@ void afficher_duree(int y, int x, int duree) {
              nb_ms_vers_centiemes(duree));
 }
 
-void affiche(Chronometre chrono) {
-    int i, j;
-    mvprintw(0, COLS / 2 - 8, "== Chronometre ==");
-    for (i = 0; i < COLS; i++)
-        mvaddch(6, i, '-');
+int bon_modulo(int a, int b) {
+    int res = a % b;
+    return res < 0 ? res + b : res;
+}
 
-    for (i = 1; i < 6; i++)
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
+void afficher_interface(Chronometre chrono) {
+    int i, j;
+
+    for (i = 0; i < LINES - 10; i++)
         for (j = 0; j < COLS; j++)
             mvaddch(i, j, ' ');
 
-    for (i = 0; i < chrono.nb_tours && i < 3; i++)
-        afficher_duree(3 - i, COLS / 2 - 8, chrono.tours[i]);
-    afficher_duree(4, COLS / 2 - 8, chrono.duree_totale);
-    mvprintw(5, COLS / 2 - 24, "Avertissement :");
-    afficher_duree(5, COLS / 2 - 8, chrono.minuteur);
+    mvprintw(0, COLS / 2 - 8, "== Chronometre ==");
 
-    mvprintw(7, 0, "Espace : lancer / mettre en pause");
-    mvprintw(8, 0, "r      : reinitialiser");
-    mvprintw(9, 0, "t      : marquer un tour");
-    mvprintw(10, 0, "F1/F2  : incrementer / decrementer heure avertissement");
-    mvprintw(11, 0, "F3/F4  : incrementer / decrementer minute avertissement");
-    mvprintw(12, 0, "F5/F6  : incrementer / decrementer seconde avertissement");
-    mvprintw(13, 0, "q      : quitter (%d)", chrono.etat);
+    for (i = 0; i < 6 && i < LINES - 11 && i < chrono.nb_tours; i++) {
+        mvprintw(LINES - 11 - i, COLS / 2 - 19, "Tour %d", chrono.nb_tours - i);
+        mvprintw(LINES - 11 - i, COLS / 2 - 10, ":");
+        afficher_duree(LINES - 11 - i, COLS / 2 - 8,
+                       chrono.tours[bon_modulo(chrono.indice_tour - 1 - i, N)]);
+    }
+
+
+    afficher_duree(LINES - 10, COLS / 2 - 8, chrono.duree_totale);
+    mvprintw(LINES - 9, COLS / 2 - 24, "Avertissement :");
+    afficher_duree(LINES - 9, COLS / 2 - 8, chrono.minuteur);
+    for (i = 0; i < COLS; i++)
+        mvaddch(LINES - 8, i, '-');
+    mvprintw(LINES - 7, 0, "Espace : lancer / mettre en pause");
+    mvprintw(LINES - 6, 0, "r      : reinitialiser");
+    mvprintw(LINES - 5, 0, "t      : marquer un tour");
+    mvprintw(LINES - 4, 0, "F1/F2  : incrementer / decrementer heure avertissement");
+    mvprintw(LINES - 3, 0, "F3/F4  : incrementer / decrementer minute avertissement");
+    mvprintw(LINES - 2, 0, "F5/F6  : incrementer / decrementer seconde avertissement");
+    mvprintw(LINES - 1, 0, "q      : quitter");
+    refresh();
 }
 
 int main(void) {
     Time temps_debut, temps_fin;
-    int touche;
+    int touche, alarme = 0;
     initscr();
     noecho();
     nodelay(stdscr, TRUE);
@@ -103,14 +119,17 @@ int main(void) {
     gettimeofday(&temps_debut, NULL);
     gettimeofday(&temps_fin, NULL);
 
-    affiche(chrono);
+    afficher_interface(chrono);
     while (1) {
         touche = getch();
 
         if (COLS < 58 || LINES < 14) {
-            endwin();
-            printf("ERREUR : taille de la fenêtre trop petite !\n");
-            return 1;
+            clear();
+            attron(A_BOLD);
+            mvprintw(0, 0, "ERREUR : ");
+            attroff(A_BOLD);
+            printw("Taille de la fenêtre trop petite !");
+            continue;
         }
 
         if (touche != ERR) {
@@ -120,13 +139,16 @@ int main(void) {
                 break;
             } else if (touche == 'r') {
                 chrono.duree_totale = 0;
+                chrono.indice_tour = 0;
                 chrono.etat = 0;
-                chrono.nb_tours = 0;
+                alarme = 0;
             } else if (touche == 't') {
-                //TODO: ajouter tour.
+                ajouter_tour(&chrono);
             } else {
                 switch (touche) {
                     case KEY_F(1):
+                        if (chrono.minuteur + 60 * 60 * 1000 > 359999000)
+                            break;
                         chrono.minuteur += 60 * 60 * 1000;
                         break;
                     case KEY_F(2):
@@ -135,6 +157,8 @@ int main(void) {
                         chrono.minuteur -= 60 * 60 * 1000;
                         break;
                     case KEY_F(3):
+                        if (chrono.minuteur + 60 * 1000 > 359999000)
+                            break;
                         chrono.minuteur += 60 * 1000;
                         break;
                     case KEY_F(4):
@@ -143,6 +167,8 @@ int main(void) {
                         chrono.minuteur -= 60 * 1000;
                         break;
                     case KEY_F(5):
+                        if (chrono.minuteur + 1000 > 359999000)
+                            break;
                         chrono.minuteur += 1000;
                         break;
                     case KEY_F(6):
@@ -150,29 +176,42 @@ int main(void) {
                             break;
                         chrono.minuteur -= 1000;
                         break;
+                    case KEY_RESIZE:
+                        clear();
+                        afficher_interface(chrono);
+                        refresh();
+                        break;
                     default:
                         continue;
                 }
             }
-            affiche(chrono);
         }
 
         usleep(5000);
 
         if (chrono.etat == 0) {
             gettimeofday(&temps_debut, NULL);
+            afficher_interface(chrono);
+            refresh();
             continue;
         }
 
         gettimeofday(&temps_fin, NULL);
         chrono.duree_totale += intervalle_ms(temps_debut, temps_fin);
+
+        if (chrono.duree_totale > MAX_TIME)
+            chrono.duree_totale = 0;
+
         temps_debut = temps_fin;
 
-        if (chrono.minuteur >= chrono.duree_totale) {
-            afficher_flash();
+        if (chrono.minuteur < chrono.duree_totale && alarme == 0) {
+            /* afficher_flash(); */
+            beep();
+            flash();
+            alarme = 1;
         }
 
-        affiche(chrono);
+        afficher_interface(chrono);
     }
 
     endwin();
