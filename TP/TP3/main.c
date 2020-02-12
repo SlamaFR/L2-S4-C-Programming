@@ -8,13 +8,10 @@ int nb_ms_vers_secondes(int nb_ms);
 int nb_ms_vers_minutes(int nb_ms);
 int nb_ms_vers_heures(int nb_ms);
 
-/*
 int main(int argc, const char * argv[]) {
     int cent = nb_ms_vers_centiemes(1213);
     printf("cent = %d", cent);
 }
- */
-
 
 long int intervalle_ms(Time debut, Time fin) {
     return (fin.tv_sec - debut.tv_sec) * 1000 + (fin.tv_usec - debut.tv_usec) / 1000;

@@ -1,7 +1,23 @@
 #include <sys/time.h>
 #include <ncurses.h>
 #include <unistd.h>
-#include "main.c"
+
+int nb_ms_vers_centiemes(int nb_ms){
+    return (nb_ms/10)%100;
+}
+
+
+int nb_ms_vers_secondes(int nb_ms){
+    return (nb_ms/1000)%60;
+}
+
+int nb_ms_vers_minutes(int nb_ms){
+    return (nb_ms/(60*1000))%60;
+}
+
+int nb_ms_vers_heures(int nb_ms){
+    return nb_ms_vers_minutes(nb_ms)/60;
+}
 
 int main(void) {
     int temps = 0;
