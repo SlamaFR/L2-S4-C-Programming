@@ -1,17 +1,18 @@
 #include <ncurses.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <assert.h>
 
-#define MAX_TIME 640000000
-#define N 10
+#define MAX_TIME 359999999
+#define N 7
 
 typedef struct timeval Time;
 
 typedef struct Chrono {
     int etat;
-    long int duree_totale;
-    long int minuteur;
-    long int tours[N];
+    long duree_totale;
+    long minuteur;
+    long tours[N];
     int nb_tours;
     int indice_tour;
 } Chronometre;
@@ -46,32 +47,27 @@ int nb_ms_vers_heures(int nb_ms) {
 }
 
 void ajouter_tour(Chronometre *chrono) {
-    chrono->tours[chrono->indice_tour % N] = chrono->duree_totale;
+    assert(chrono != NULL);
+    assert(chrono->tours != NULL);
+    int i;
 
-    /*Incrémenter l'indice du dernier tour.*/
-    chrono->indice_tour++;
+    for (i = chrono->indice_tour; i > 0; i--)
+        chrono->tours[i] = chrono->tours[i - 1];
+
+    chrono->tours[0] = chrono->duree_totale;
+
+    if (chrono->indice_tour < N - 1)
+        chrono->indice_tour++;
+
     chrono->nb_tours++;
 }
 
-void afficher_flash() {
-
-}
-
 void afficher_duree(int y, int x, int duree) {
-    mvprintw(y, x, "%2d : %2d : %2d : %2d",
+    mvprintw(y, x, "%02d : %02d : %02d : %02d",
              nb_ms_vers_heures(duree),
              nb_ms_vers_minutes(duree),
              nb_ms_vers_secondes(duree),
              nb_ms_vers_centiemes(duree));
-}
-
-int bon_modulo(int a, int b) {
-    int res = a % b;
-    return res < 0 ? res + b : res;
-}
-
-int max(int a, int b) {
-    return a > b ? a : b;
 }
 
 void afficher_interface(Chronometre chrono) {
@@ -83,11 +79,10 @@ void afficher_interface(Chronometre chrono) {
 
     mvprintw(0, COLS / 2 - 8, "== Chronometre ==");
 
-    for (i = 0; i < 6 && i < LINES - 11 && i < chrono.nb_tours; i++) {
+    for (i = 0; i < LINES - 11 && i < chrono.indice_tour && chrono.indice_tour != 0; i++) {
         mvprintw(LINES - 11 - i, COLS / 2 - 19, "Tour %d", chrono.nb_tours - i);
         mvprintw(LINES - 11 - i, COLS / 2 - 10, ":");
-        afficher_duree(LINES - 11 - i, COLS / 2 - 8,
-                       chrono.tours[bon_modulo(chrono.indice_tour - 1 - i, N)]);
+        afficher_duree(LINES - 11 - i, COLS / 2 - 8, chrono.tours[i]);
     }
 
 
@@ -205,8 +200,6 @@ int main(void) {
         temps_debut = temps_fin;
 
         if (chrono.minuteur < chrono.duree_totale && alarme == 0) {
-            /* afficher_flash(); */
-            beep();
             flash();
             alarme = 1;
         }
