@@ -13,20 +13,19 @@
 #include "Case.h"
 
 /* Déclaration de liste chainée représentant le serpent*/
-typedef struct cellule_serpent{
-    
+typedef struct cellule_serpent {
     Case case_serpent;
-    struct cellule *suivant;
-    
-}CelluleSerpent , *ListeSerpent;
+    struct cellule_serpent *suivant;
+} CelluleSerpent, *ListeSerpent;
 
 
-typedef struct serpent{
-    
+typedef struct serpent {
     Direction direction;
     ListeSerpent corps;
-    
-}Serpent;
+} Serpent;
 
+int inserer_tete(ListeSerpent *liste, Case _case);
+
+int supprimer_queue(ListeSerpent *liste);
 
 #endif /* Serpent_h */
