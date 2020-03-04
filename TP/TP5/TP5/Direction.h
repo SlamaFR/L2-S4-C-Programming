@@ -14,7 +14,10 @@ typedef enum{
     SUD,
     EST,
     OUEST
-    
+
 }Direction;
+
+int direction_autorisee(Direction direction, Serpent serpent);
+
 
 #endif /* Direction_h */

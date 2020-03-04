@@ -91,3 +91,71 @@ int mort_serpent(Monde *monde) {
     Case _case = prochaine_case(monde->serpent.corps->case_serpent, monde->serpent.direction);
     return (!case_dans_monde(*monde, _case) || serpent_dans_case(*monde, _case));
 }
+
+
+Serpent init_serpent(Monde mon){
+    
+    Serpent serpent;
+    
+    serpent.direction = EST;
+    serpent.corps = malloc(sizeof(CelluleSerpent));
+    
+    if(serpent.corps != NULL){
+        serpent.corps->case_serpent.y = mon.nombre_lignes/2;
+        serpent.corps->case_serpent.x = mon.nombre_colonnes/2;
+        serpent.corps->suivant = NULL;
+    }
+
+    
+    /*Première case après la tête*/
+    serpent.corps->suivant->case_serpent.y = serpent.corps->case_serpent.y;
+    serpent.corps->suivant->case_serpent.x = serpent.corps->case_serpent.x-1;
+    
+    /*Deuxième case après la tête*/
+    serpent.corps->suivant->suivant->case_serpent.y = serpent.corps->suivant->case_serpent.y;
+    serpent.corps->suivant->suivant->case_serpent.x = serpent.corps->suivant->case_serpent.x-1;
+    
+    /*Troisième case après la tête*/
+    serpent.corps->suivant->suivant->suivant->case_serpent.y = serpent.corps->suivant->suivant->case_serpent.y;
+    serpent.corps->suivant->suivant->suivant->case_serpent.x = serpent.corps->suivant->suivant->case_serpent.x-1;
+    
+    serpent.corps->suivant->suivant->suivant->suivant = NULL;
+    
+    return serpent;
+}
+void ajouter_pomme_monde(Monde *mon){
+    
+    mon->pommes = malloc(sizeof(CellulePomme));
+    if (case_vide){
+        
+    }
+    
+    
+}
+Monde init_monde(int nb_pommes){
+    
+    Monde monde;
+    int i;
+    
+    monde.nombre_colonnes = 64;
+    monde.nombre_lignes = 32;
+    monde.nombre_pommes_mangees = 0;
+    
+    monde.pommes = malloc(sizeof(CellulePomme));
+    
+    if(monde.pommes != NULL){
+        i=0;
+        ListePomme actuel = monde.pommes;
+        
+        while (i < nb_pommes){
+            actuel->pomme = pomme_gen_alea(monde.nombre_lignes, monde.nombre_colonnes);
+            actuel = actuel->suivant;
+        }
+        
+        actuel->suivant = NULL;
+    }
+    
+    monde.serpent = init_serpent(monde);
+    
+    return monde;
+}

@@ -3,8 +3,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "Pomme.h"
 #include "Serpent.h"
+#include "Case.h"
+#include "Direction.h"
 
 typedef struct cellpomme {
     Pomme pomme;
@@ -32,4 +35,10 @@ int manger_pomme(Monde *monde);
 
 int mort_serpent(Monde *monde);
 
-#endif /* __MONDE_H */
+void ajouter_pomme_monde(Monde *mon);
+
+Monde init_monde(int nb_pommes);
+
+Serpent init_serpent(Monde mon);
+
+#endif /* Monde_h */
