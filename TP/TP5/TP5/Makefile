@@ -1,9 +1,17 @@
 CC=gcc
 CFLAGS=-ansi -pedantic -Wall
-OBJ=main.o
+OBJ=Main.o
 
 Snake: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
+
+Main.o: Main.c
+
+# Pomme.o: Case.o
+
+# Serpent.o: Case.o Direction.o
+
+# Monde.o: Pomme.o Serpent.o
 
 %.o: %.c
 	$(CC) -c $< $(CFLAGS)
