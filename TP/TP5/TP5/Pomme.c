@@ -1,18 +1,9 @@
-//
-//  Pomme.c
-//  TP5
-//
-
-
+#include <stdlib.h>
 #include "Pomme.h"
 
-Pomme pomme_gen_alea(int n, int m){
-    
-    Pomme new_pomme;
-        
-    new_pomme.case_pomme.y = rand() % n;
-    new_pomme.case_pomme.x = rand() % m;
-    
-    return new_pomme;
-    
+Apple generate_random_apple(int n, int m) {
+    Apple apple;
+    apple.apple_cell.y = rand() % n;
+    apple.apple_cell.x = rand() % m;
+    return apple;
 }

@@ -1,17 +1,17 @@
 CC=gcc
 CFLAGS=-ansi -pedantic -Wall
-OBJ=Main.o
+OBJ=Pomme.o Case.o Direction.o Serpent.o Monde.o Main.o
 
 Snake: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $^ $(CFLAGS) -lncurses
 
-Main.o: Main.c
+Main.o: Main.c Monde.h
 
-# Pomme.o: Case.o
+Pomme.o: Pomme.c Pomme.h Case.h
 
-# Serpent.o: Case.o Direction.o
+Serpent.o: Serpent.c Direction.h Serpent.h Case.h
 
-# Monde.o: Pomme.o Serpent.o
+Pomme.o: Monde.c Monde.h POmme.h Serpent.h Case.h Direction.h
 
 %.o: %.c
 	$(CC) -c $< $(CFLAGS)
@@ -23,9 +23,9 @@ mrproper: clean
 	rm -f Snake
 
 install: Snake
-	mkdir ../bin
-	mv Snake ../bin/Snake
+	mkdir bin
+	mv Snake bin/Snake
 	make mrproper
 
 uninstall:
-	rm -rf ../bin
+	rm -rf bin

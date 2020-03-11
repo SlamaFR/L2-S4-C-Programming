@@ -1,18 +1,18 @@
-//
-//  Case.h
-//  TP5
-//
-
-#ifndef Case_h
-#define Case_h
+#ifndef __CASE_H
+#define __CASE_H
 
 #include <stdio.h>
 #include <stdlib.h>
 
 
-typedef struct case_m{
-    
-    int x,y;
-}Case;
+typedef struct __s_cell {
+    int x, y;
+} Cell;
 
-#endif /* Case_h */
+Cell create_cell(int x, int y);
+
+void display_cell(Cell cell);
+
+int equals_cells(Cell cell1, Cell cell2);
+
+#endif /* __CASE_H */

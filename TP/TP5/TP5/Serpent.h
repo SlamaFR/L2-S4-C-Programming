@@ -1,31 +1,25 @@
-//
-//  Serpent.h
-//  TP5
-//
-
-
-#ifndef Serpent_h
-#define Serpent_h
+#ifndef __SERPENT_H
+#define __SERPENT_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "Direction.h"
 #include "Case.h"
 
-/* Déclaration de liste chainée représentant le serpent*/
-typedef struct cellule_serpent {
-    Case case_serpent;
-    struct cellule_serpent *suivant;
-} CelluleSerpent, *ListeSerpent;
+/* Déclaration de liste chainée représentant le serpent */
+typedef struct __s_snakeCell {
+    Cell snake_cell;
+    struct __s_snakeCell *next;
+} SnakeCell, *SnakeList;
 
 
-typedef struct serpent {
+typedef struct __s_snake {
     Direction direction;
-    ListeSerpent corps;
-} Serpent;
+    SnakeList body;
+} Snake;
 
-int inserer_tete(ListeSerpent *liste, Case _case);
+int insert_head(SnakeList *list, Cell cell);
 
-int supprimer_queue(ListeSerpent *liste);
+void remove_tail(SnakeList *list);
 
-#endif /* Serpent_h */
+#endif /* __SERPENT_H */

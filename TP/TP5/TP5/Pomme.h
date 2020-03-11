@@ -1,22 +1,15 @@
-//
-//  Pomme.h
-//  TP5
-//
-
-
-#ifndef Pomme_h
-#define Pomme_h
+#ifndef __POMME_H
+#define __POMME_H
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "Case.h"
 
-typedef struct pomme{
-    
-    Case case_pomme;
-}Pomme;
+typedef struct __s_apple {
+    Cell apple_cell;
+} Apple;
 
-Pomme pomme_gen_alea(int n, int m);
+Apple generate_random_apple(int n, int m);
 
-#endif /* Pomme_h */
+#endif /* __POMME_H */

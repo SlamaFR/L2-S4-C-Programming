@@ -1,23 +1,16 @@
-//
-//  Direction.h
-//  TP5
-//
-
-#ifndef Direction_h
-#define Direction_h
+#ifndef __DIRECTION_H
+#define __DIRECTION_H
 
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef enum{
-    NORD,
-    SUD,
-    EST,
-    OUEST
+typedef enum {
+    NORTH,
+    SOUTH,
+    EAST,
+    WEST
+} Direction;
 
-}Direction;
+int allowed_direction(Direction direction1, Direction direction2);
 
-int direction_autorisee(Direction direction, Serpent serpent);
-
-
-#endif /* Direction_h */
+#endif /* __DIRECTION_H */

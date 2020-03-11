@@ -9,36 +9,36 @@
 #include "Case.h"
 #include "Direction.h"
 
-typedef struct cellpomme {
-    Pomme pomme;
-    struct cellpomme *suivant;
-} CellulePomme, *ListePomme;
+typedef struct __s_appleCell {
+    Apple apple;
+    struct __s_appleCell *next;
+} AppleCell, *AppleList;
 
-typedef struct monde {
-    int nombre_lignes, nombre_colonnes;
-    int nombre_pommes_mangees;
-    ListePomme pommes;
-    Serpent serpent;
-} Monde;
+typedef struct __s_world {
+    int height, width;
+    int eaten_apple_amount;
+    AppleList apples;
+    Snake snake;
+} World;
 
-int case_vide(Monde monde, Case _case);
+int empty_cell(World world, Cell cell);
 
-int serpent_dans_case(Monde monde, Case _case);
+int snake_in_cell(World world, Cell cell);
 
-int case_dans_monde(Monde monde, Case _case);
+int cell_in_world(World world, Cell cell);
 
-Case prochaine_case(Case _case, Direction direction);
+Cell next_cell(Cell cell, Direction direction);
 
-int deplacer_serpent(Monde *monde);
+int move_snake(World *world);
 
-int manger_pomme(Monde *monde);
+int eat_apple(World *world);
 
-int mort_serpent(Monde *monde);
+int snake_death(World *world);
 
-void ajouter_pomme_monde(Monde *mon);
+int add_apple_to_world(World *world);
 
-Monde init_monde(int nb_pommes);
+World init_world(int apples_amount);
 
-Serpent init_serpent(Monde mon);
+Snake init_snake(World world);
 
 #endif /* Monde_h */
