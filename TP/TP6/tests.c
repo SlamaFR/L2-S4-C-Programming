@@ -60,14 +60,14 @@ int test_insertWord() {
 }
 
 int test() {
-    int functions[] = {
+    int functions[NB_TESTS] = {
             test_insertWord()
-    }, i;
+    }, i, result = 1;
 
     for (i = 0; i < NB_TESTS; i++) {
-        if (functions[i] != 1) return 0;
+        if (functions[i] != 1) result = 0;
     }
 
-    printf("[TEST] Tous les tests sont passés avec succès !\n");
-    return 1;
+    if (result == 1) printf("[TEST] Tous les tests sont passés avec succès !\n");
+    return result;
 }
