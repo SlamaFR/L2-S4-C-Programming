@@ -3,4 +3,4 @@
 
 int test();
 
-#endif //CLM_TESTS_H
+#endif /* CLM_TESTS_H */

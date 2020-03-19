@@ -1,10 +1,10 @@
 NAME=clm
 CC=gcc
 CFLAGS=-ansi -pedantic -Wall
-OBJ=main.o hachage.o tri.o lecteur.o tests.o
+OBJ=main.o liste.o lecteur.o tests.o
 
 $(NAME): $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) -lncurses
+	$(CC) -o $@ $^ $(CFLAGS)
 
 %.o: %.c
 	$(CC) -c $< $(CFLAGS)
