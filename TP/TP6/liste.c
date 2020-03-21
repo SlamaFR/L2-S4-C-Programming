@@ -7,7 +7,7 @@ void displayList(List list) {
     Cell *c = list;
     int i;
     for (i = 0; i < 20 && c; i++) {
-        printf("Cell{\"%s\":%d} -> ", c->word, c->occurrences);
+        printf("Cell{\"%s\":%d} <-> ", c->word, c->occurrences);
         c = c->next;
     }
     printf("NULL\n");
@@ -34,6 +34,7 @@ int insertWord(List *list, char *word) {
     if (!cell) return 0;
     cell->occurrences = 1;
     cell->word = (char *) malloc(strlen(word));
+    if (!cell->word) return 0;
     cell->next = NULL;
     cell->previous = NULL;
     strcpy(cell->word, word);
@@ -59,6 +60,7 @@ int insertWordAlphabetically(List *list, char *word) {
     if (!cell) return 0;
     cell->occurrences = 1;
     cell->word = (char *) malloc(strlen(word));
+    if (!cell->word) return 0;
     cell->next = NULL;
     cell->previous = NULL;
     strcpy(cell->word, word);
@@ -85,38 +87,49 @@ int insertWordAlphabetically(List *list, char *word) {
 }
 
 int insertWordByOccurrences(List *list, char *word) {
-    Cell *current = *list, *cell = NULL, *precedent = NULL;
+    Cell *current = *list, *cell = NULL, *tmp = NULL;
 
     if ((cell = getWord(*list, word)) != NULL) {
         cell->occurrences++;
-        if (cell->next) cell->next->previous = cell->previous;
-        if (cell->previous) cell->previous->next = cell->next;
+
+        /* Décalage vers la tête (gauche) */
+        while (cell->previous != NULL && cell->previous->occurrences < cell->occurrences) {
+            tmp = cell->previous;
+
+            tmp->next = cell->next;
+            cell->previous = tmp->previous;
+            cell->next = tmp;
+            tmp->previous = cell;
+
+            if (cell->previous) cell->previous->next = cell;
+            else *list = cell;
+
+            if (tmp->next) tmp->next->previous = tmp;
+        }
     } else {
         cell = (Cell *) malloc(sizeof(Cell));
         if (!cell) return 0;
         cell->occurrences = 1;
         cell->word = (char *) malloc(strlen(word));
+        if (!cell->word) return 0;
         cell->next = NULL;
         cell->previous = NULL;
         strcpy(cell->word, word);
-    }
 
-    if (!current) {
-        *list = cell;
-    } else {
-        while (current != NULL && current->occurrences > cell->occurrences) {
-            precedent = current;
+        while (current && current->occurrences > cell->occurrences) {
+            tmp = current;
             current = current->next;
         }
-        if (precedent != NULL) {
-            cell->next = (cell == current ? NULL : current);
-            if (current) current->previous = cell;
-            precedent->next = cell;
-            cell->previous = precedent;
-        } else {
-            cell->next = (cell == current ? NULL : current);
-            current->previous = cell;
+
+        if (tmp == NULL) {
+            cell->next = *list;
+            if (*list) (*list)->previous = cell;
             *list = cell;
+        } else {
+            cell->next = current;
+            if (current)current->previous = cell;
+            tmp->next = cell;
+            cell->previous = tmp;
         }
     }
     return 1;
