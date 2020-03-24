@@ -6,7 +6,7 @@
 #include "lecteur.h"
 #include "liste.h"
 
-#define NB_TESTS 4
+#define NB_TESTS 8
 
 int test_insertWord() {
     List list = NULL;
@@ -181,12 +181,59 @@ int test_getWord() {
     return 1;
 }
 
+int test_readFileByWords(){
+    List list = NULL;
+    FILE *file;
+    file = fopen("texte.txt", "r");
+    int none_result, lexicographic_result, occurence_result;
+    
+    none_result = readFileByWords(file, &list, NONE);
+    lexicographic_result = readFileByWords(file, &list, LEXICOGRAPHIC);
+    occurence_result = readFileByWords(file, &list, BY_OCCURRENCES);
+    
+    if (none_result == 0 || lexicographic_result == 0 || occurence_result == 0) {
+        printf("[TEST] readFileByWords() : Erreur test n°1 !\n");
+        return 0;
+    }
+    return 1;
+}
+
+int test_readFileByWordsSuffixes(){
+    List list = NULL;
+    FILE *file;
+    file = fopen("texte.txt", "r");
+    int none_result, lexicographic_result, occurence_result;
+    
+    none_result = readFileByWordsSuffixes(file, &list, NONE);
+    lexicographic_result = readFileByWords(file, &list, LEXICOGRAPHIC);
+    occurence_result = readFileByWords(file, &list, BY_OCCURRENCES);
+    
+    if (none_result == 0 || lexicographic_result == 0 || occurence_result == 0) {
+        printf("[TEST] readFileByWords() : Erreur test n°1 !\n");
+        return 0;
+    }
+    return 1;
+    
+}
+
+int test_readFileByWordsPrefixes(){
+    return 1;
+}
+
+int test_readFileByExpressions(){
+    return 1; 
+}
+
 int test() {
     int (*tests[NB_TESTS])() = {
             &test_insertWord,
             &test_insertWordAlphabetically,
             &test_insertWordByOccurrences,
-            &test_getWord
+            &test_getWord,
+            &test_readFileByWords,
+            &test_readFileByWordsSuffixes,
+            &test_readFileByWordsPrefixes,
+            &test_readFileByExpressions
     }, i, result = 1;
 
     for (i = 0; i < NB_TESTS; i++) {
