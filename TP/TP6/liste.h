@@ -10,6 +10,8 @@ typedef struct cell {
 
 void displayList(List list);
 
+void displayWordsOfList(List list);
+
 Cell *getWord(List list, char *word);
 
 /**
@@ -18,6 +20,8 @@ Cell *getWord(List list, char *word);
  * @return Résultat (1 = succès, 0 = échec).
  */
 int insertWord(List *list, char *word);
+
+int insertWordUnsorted(List *list, char *word);
 
 int insertWordAlphabetically(List *list, char *word);
 

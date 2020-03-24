@@ -153,7 +153,6 @@ int readFileByExpressions(FILE *file, List *list, List *list2, SortType sort, in
         }
         
         if (sort == NONE){
-            printf("NONE");
             insertWord(list2, wordCat);
         }
         else if (sort == LEXICOGRAPHIC)
