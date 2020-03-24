@@ -9,6 +9,13 @@ void displayWordsOfList(List list) {
         printf("%s  %d\n", current->word, current->occurrences);
 }
 
+void displayWordsOfList(List list){
+    Cell *current = list;
+    for(current = list; current != NULL; current = current->next){
+        printf("%s  %d \n", current->word, current->occurrences);
+    }
+}
+
 Cell *getWord(List list, char *word) {
     Cell *current;
     for (current = list; current; current = current->next) {
@@ -43,6 +50,28 @@ int insertWord(List *list, char *word, int unique) {
 
     return 1;
 }
+
+int insertWordUnsorted(List *list, char *word) {
+    Cell *cell = NULL;
+
+    cell = (Cell *) malloc(sizeof(Cell));
+    if (!cell) return 0;
+    cell->occurrences = 1;
+    cell->word = (char *) malloc(strlen(word));
+    if (!cell->word) return 0;
+    cell->next = NULL;
+    cell->previous = NULL;
+    strcpy(cell->word, word);
+
+    if (*list) {
+        cell->next = *list;
+        (*list)->previous = cell;
+    }
+    *list = cell;
+
+    return 1;
+}
+
 
 int insertWordAlphabetically(List *list, char *word) {
     Cell *current = *list, *cell = NULL, *precedent = NULL;
