@@ -200,16 +200,18 @@ int test_readFileByWords(){
 
 int test_readFileByWordsSuffixes(){
     List list = NULL;
+    List list2 = NULL;
+    char *word = "test";
     FILE *file;
-    file = fopen("texte.txt", "r");
     int none_result, lexicographic_result, occurence_result;
+    file = fopen("test.ascii", "r");
     
-    none_result = readFileByWordsSuffixes(file, &list, NONE);
-    lexicographic_result = readFileByWords(file, &list, LEXICOGRAPHIC);
-    occurence_result = readFileByWords(file, &list, BY_OCCURRENCES);
+    none_result = readFileByWordsSuffixes(file, &list, &list2, word,   NONE);
+    lexicographic_result = readFileByWordsSuffixes(file, &list, &list2, word, LEXICOGRAPHIC );
+    occurence_result = readFileByWordsSuffixes(file, &list, &list2, word, BY_OCCURRENCES );
     
     if (none_result == 0 || lexicographic_result == 0 || occurence_result == 0) {
-        printf("[TEST] readFileByWords() : Erreur test n°1 !\n");
+        printf("[TEST] readFileByWordsSuffixes() : Erreur test n°1 !\n");
         return 0;
     }
     return 1;
@@ -217,11 +219,41 @@ int test_readFileByWordsSuffixes(){
 }
 
 int test_readFileByWordsPrefixes(){
+    List list = NULL;
+    List list2 = NULL;
+    char *word = "test";
+    FILE *file;
+    int none_result, lexicographic_result, occurence_result;
+    file = fopen("test.ascii", "r");
+    
+    
+    none_result = readFileByWordsPrefixes(file, &list, &list2, word,   NONE);
+    lexicographic_result = readFileByWordsPrefixes(file, &list, &list2, word, LEXICOGRAPHIC );
+    occurence_result = readFileByWordsPrefixes(file, &list, &list2, word, BY_OCCURRENCES );
+    
+    if (none_result == 0 || lexicographic_result == 0 || occurence_result == 0) {
+        printf("[TEST] readFileByWordsPrefixes() : Erreur test n°1 !\n");
+        return 0;
+    }
     return 1;
 }
 
 int test_readFileByExpressions(){
-    return 1; 
+    List list = NULL;
+    List list2 = NULL;
+    FILE *file;
+    int none_result, lexicographic_result, occurence_result;
+    file = fopen("test.ascii", "r");
+    
+    none_result = readFileByExpressions(file, &list, &list2, NONE, 2);
+    lexicographic_result = readFileByExpressions(file, &list, &list2, LEXICOGRAPHIC, 2);
+    occurence_result = readFileByExpressions(file, &list, &list2, BY_OCCURRENCES, 2);
+    
+    if (none_result == 0 || lexicographic_result == 0 || occurence_result == 0) {
+        printf("[TEST] readFileByWordsExpressions() : Erreur test n°1 !\n");
+        return 0;
+    }
+    return 1;
 }
 
 int test() {
