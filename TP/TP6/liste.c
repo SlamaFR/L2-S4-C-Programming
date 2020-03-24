@@ -9,13 +9,6 @@ void displayWordsOfList(List list) {
         printf("%s  %d\n", current->word, current->occurrences);
 }
 
-void displayWordsOfList(List list){
-    Cell *current = list;
-    for(current = list; current != NULL; current = current->next){
-        printf("%s  %d \n", current->word, current->occurrences);
-    }
-}
-
 Cell *getWord(List list, char *word) {
     Cell *current;
     for (current = list; current; current = current->next) {

@@ -10,8 +10,6 @@ typedef struct cell {
 
 void displayWordsOfList(List list);
 
-void displayWordsOfList(List list);
-
 Cell *getWord(List list, char *word);
 
 /**
