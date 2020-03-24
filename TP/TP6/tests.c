@@ -182,7 +182,7 @@ int test_getWord() {
     return 1;
 }
 
-int test_readFileByWords() {
+int test_readFileWords() {
     List list = NULL;
     FILE *file;
     int none_result, lexicographic_result, occurence_result;
@@ -216,8 +216,8 @@ int test_groupBySuffixes() {
     readFileWords(file, &wordsList, NONE);
 
     none_result = groupBySuffixes(wordsList, &list, word, NONE);
-    lexicographic_result = groupBySuffixes(wordsList, &list, word, NONE);
-    occurence_result = groupBySuffixes(wordsList, &list, word, NONE);
+    lexicographic_result = groupBySuffixes(wordsList, &list, word, LEXICOGRAPHIC);
+    occurence_result = groupBySuffixes(wordsList, &list, word, BY_OCCURRENCES);
 
     if (none_result == 0 || lexicographic_result == 0 || occurence_result == 0) {
         printf("[TEST] groupBySuffixes() : Erreur test n°1 !\n");
@@ -240,8 +240,8 @@ int test_groupeByPrefixes() {
     readFileWords(file, &wordsList, NONE);
 
     none_result = groupByPrefixes(wordsList, &list, word, NONE);
-    lexicographic_result = groupByPrefixes(wordsList, &list, word, NONE);
-    occurence_result = groupByPrefixes(wordsList, &list, word, NONE);
+    lexicographic_result = groupByPrefixes(wordsList, &list, word, LEXICOGRAPHIC);
+    occurence_result = groupByPrefixes(wordsList, &list, word, BY_OCCURRENCES);
 
     if (none_result == 0 || lexicographic_result == 0 || occurence_result == 0) {
         printf("[TEST] groupByPrefixes() : Erreur test n°1 !\n");
@@ -260,11 +260,11 @@ int test_readFileByExpressions() {
     if (file == NULL)
         return 0;
 
-    readFileWords(file, &wordsList, NONE);
+    readFileWords(file, &wordsList, UNIQUE);
 
     none_result = groupByExpressions(wordsList, &list, 3, NONE);
-    lexicographic_result = groupByExpressions(wordsList, &list, 3, NONE);
-    occurence_result = groupByExpressions(wordsList, &list, 3, NONE);
+    lexicographic_result = groupByExpressions(wordsList, &list, 3, LEXICOGRAPHIC);
+    occurence_result = groupByExpressions(wordsList, &list, 3, BY_OCCURRENCES);
 
     if (none_result == 0 || lexicographic_result == 0 || occurence_result == 0) {
         printf("[TEST] groupByExpressions() : Erreur test n°1 !\n");
@@ -279,7 +279,7 @@ int test() {
             &test_insertWordAlphabetically,
             &test_insertWordByOccurrences,
             &test_getWord,
-            &test_readFileByWords,
+            &test_readFileWords,
             &test_groupBySuffixes,
             &test_groupeByPrefixes,
             &test_readFileByExpressions

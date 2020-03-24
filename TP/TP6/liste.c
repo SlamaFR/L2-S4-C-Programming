@@ -29,7 +29,7 @@ int insertWord(List *list, char *word, int unique) {
     cell = (Cell *) malloc(sizeof(Cell));
     if (!cell) return 0;
     cell->occurrences = 1;
-    cell->word = (char *) malloc(strlen(word));
+    cell->word = (char *) malloc(strlen(word) + 1);
     if (!cell->word) return 0;
     cell->next = NULL;
     cell->previous = NULL;

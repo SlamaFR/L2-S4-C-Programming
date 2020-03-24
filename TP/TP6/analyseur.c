@@ -61,6 +61,75 @@ int groupByPrefixes(List wordsList, List *list, char *word, SortType sort) {
 }
 
 int groupByExpressions(List wordsList, List *list, int n, SortType sort) {
+    Cell *current = wordsList, *cursor;
+    int i;
+    char *expression;
+
+    while (current->next) current = current->next;
+
+    while (current->previous) {
+        expression = NULL;
+
+        cursor = current;
+        for (i = 0; i < n; i++) {
+            expression = realloc(expression, sizeof(expression) + sizeof(cursor->word) + sizeof(char));
+            if (expression == NULL)
+                return 0;
+
+            strcat(expression, cursor->word);
+            strcat(expression, " ");
+            cursor = cursor->previous;
+
+            if (cursor == NULL) break;
+        }
+        strcat(expression, "\0");
+
+        if (i + 1 < n) break;
+
+        switch (sort) {
+            case NONE:
+                insertWord(list, expression, 0);
+                break;
+            case LEXICOGRAPHIC:
+                insertWordAlphabetically(list, expression);
+                break;
+            case BY_OCCURRENCES:
+                insertWordByOccurrences(list, expression);
+                break;
+            default:
+                return 0;
+        }
+        current = current->previous;
+    }
+    return 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
     Cell *current;
     Cell *current2;
     Cell *current3;
@@ -115,4 +184,5 @@ int groupByExpressions(List wordsList, List *list, int n, SortType sort) {
         current3 = current;
     }
     return 1;
+     */
 }

@@ -13,6 +13,7 @@ int main(int ac, char **av) {
     int i, res, lexicographic = 0, occurrences = 0, prefixes = 0, suffixes = 0, expressions = 0;
     char *arg_words = NULL;
 
+
     if (!test()) {
         printf("Échec des tests !\n");
         return 1;
