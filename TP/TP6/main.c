@@ -21,7 +21,7 @@ int main(int ac, char **av) {
     file = fopen(av[1] , "r");
     /* Liste chainée avec les mots dans l'ordre du fichier*/
     readFileByWords(file, &list, LEXICOGRAPHIC);
-    displayWordsOfList(list);
+   
     
     assert(av[2] != NULL);
     
@@ -66,7 +66,7 @@ int main(int ac, char **av) {
     }
 
     
-//    displayWordsOfList(listWords);
+    displayWordsOfList(listWords);
     
     
     
