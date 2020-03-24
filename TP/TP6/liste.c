@@ -3,14 +3,10 @@
 #include <stdio.h>
 #include "liste.h"
 
-void displayList(List list) {
-    Cell *c = list;
-    int i;
-    for (i = 0; i < 20 && c; i++) {
-        printf("Cell{\"%s\":%d} <-> ", c->word, c->occurrences);
-        c = c->next;
-    }
-    printf("NULL\n");
+void displayWordsOfList(List list) {
+    Cell *current;
+    for (current = list; current != NULL; current = current->next)
+        printf("%s  %d\n", current->word, current->occurrences);
 }
 
 Cell *getWord(List list, char *word) {
@@ -22,10 +18,10 @@ Cell *getWord(List list, char *word) {
     return NULL;
 }
 
-int insertWord(List *list, char *word) {
+int insertWord(List *list, char *word, int unique) {
     Cell *cell = NULL;
 
-    if ((cell = getWord(*list, word)) != NULL) {
+    if ((cell = getWord(*list, word)) != NULL && !unique) {
         cell->occurrences++;
         return 1;
     }

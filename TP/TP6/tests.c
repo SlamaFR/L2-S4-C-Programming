@@ -13,7 +13,7 @@ int test_insertWord() {
     char *word1 = "test1", *word2 = "test2";
     Cell *cell;
 
-    int insert_result = insertWord(&list, word1);
+    int insert_result = insertWord(&list, word1, 0);
 
     /* Test de l'appel */
     if (insert_result == 0) {
@@ -48,14 +48,14 @@ int test_insertWord() {
     }
 
     /* Test de la mise à jour du nombre d'occurrences */
-    insertWord(&list, word1);
+    insertWord(&list, word1, 0);
     if (cell->occurrences != 2) {
         printf("[TEST] insertWord() : Erreur test n°6 !\n");
         return 0;
     }
 
     /* Test de l'insertion d'un deuxième mot différent */
-    insert_result = insertWord(&list, word2);
+    insert_result = insertWord(&list, word2, 0);
     if (insert_result == 0) {
         printf("[TEST] insertWord() : Erreur test n°7 !\n");
         return 0;
@@ -169,7 +169,7 @@ int test_getWord() {
     char *word = "test";
     Cell *cell;
 
-    insertWord(&list, word);
+    insertWord(&list, word, 0);
     cell = getWord(list, word);
 
     /* Vérification du résultat */

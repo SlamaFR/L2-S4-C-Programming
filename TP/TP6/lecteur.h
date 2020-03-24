@@ -5,17 +5,12 @@
 #define CLM_LECTEUR_H
 
 typedef enum {
-    LEXICOGRAPHIC,
-    BY_OCCURRENCES,
-    NONE
+    UNIQUE,             /* Chaque mot du texte possède une case unique. */
+    LEXICOGRAPHIC,      /* Les cases sont triées par ordre lexicographique. */
+    BY_OCCURRENCES,     /* Les cases sont triées par ordre d'occurrences. */
+    NONE                /* Les cases ne sont pas triées. */
 } SortType;
 
-int readFileByWords(FILE *file, List *list, SortType sort);
-
-int readFileByWordsSuffixes(FILE *file, List *list, SortType sort);
-
-int readFileByWordsPrefixes(FILE *file, List *list, SortType sort);
-
-int readFileByExpressions(FILE *file, List *list, SortType sort, int n);
+int readFileWords(FILE *file, List *list, SortType sort);
 
 #endif /* CLM_LECTEUR_H */

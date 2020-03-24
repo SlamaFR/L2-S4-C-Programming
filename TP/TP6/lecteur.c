@@ -1,10 +1,11 @@
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 
 #include "lecteur.h"
 #include "liste.h"
 
-int readFileByWords(FILE *file, List *list, SortType sort) {
+int readFileWords(FILE *file, List *list, SortType sort) {
     int charPos = 0, currentWordPos = 0;
     char *word = NULL, *tmp = NULL, current = 0;
     size_t size = 0;
@@ -29,8 +30,9 @@ int readFileByWords(FILE *file, List *list, SortType sort) {
             if (word) {
                 word[charPos - currentWordPos] = '\0';
                 switch (sort) {
+                    case UNIQUE:
                     case NONE:
-                        insertWord(list, word);
+                        insertWord(list, word, sort == UNIQUE);
                         break;
                     case LEXICOGRAPHIC:
                         insertWordAlphabetically(list, word);
@@ -50,17 +52,5 @@ int readFileByWords(FILE *file, List *list, SortType sort) {
         }
         charPos++;
     }
-    return 1;
-}
-
-int readFileByWordsSuffixes(FILE *file, List *list, SortType sort) {
-    return 1;
-}
-
-int readFileByWordsPrefixes(FILE *file, List *list, SortType sort) {
-    return 1;
-}
-
-int readFileByExpressions(FILE *file, List *list, SortType sort, int n) {
     return 1;
 }

@@ -1,7 +1,7 @@
 NAME=clm
 CC=gcc
 CFLAGS=-ansi -pedantic -Wall
-OBJ=main.o liste.o lecteur.o tests.o
+OBJ=main.o liste.o lecteur.o tests.o analyseur.o
 
 $(NAME): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
